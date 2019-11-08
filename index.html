@@ -5,105 +5,34 @@
 	<script src="https://cdn.jsdelivr.net/npm/vega@5.7.2"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.0-beta.10"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vega-embed@5.1.3"></script>
+
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
+
+	<div id="topBar">
+		<select id="fromYear" value="From">
+			<option value="2007" selected="selected">2007</option>
+			<option value="2008">2008</option>
+			<option value="2009">2009</option>
+			<option value="2010">2010</option>
+			<option value="2011">2011</option>
+		</select>
+		<input type="button" value="Go" onclick="setScatterPlot(
+				document.getElementById('fromYear').value)">
+	</div>
+
+
+
+
+
 	<div id="vis"></div>
 	<div id="scatter"></div>
+	<div id="smallScatter"></div>
 
-	<script>
-		var scatterElement = {
-			$schema: "https://vega.github.io/schema/vega-lite/v4.json",
-			repeat: {
-				row: ["avgInc", "homelessPercent", "crimePercent", "unemployedPercent"],
-				column: ["avgInc", "homelessPercent", "crimePercent", "unemployedPercent"]
-			},
-			spec: {
-				"width": 400,
-				"height": 400,
-				data: {
-					url: "data.json"
-				},
-				mark: "point",
-				"calculate": "'https://en.wikipedia.org/wiki/' + datum.State", "as": "url",
-				description: "State",
-				selection: {
-					brush: {
-						type: "interval",
-						resolve: "union",
-						on: "[mousedown[event.shiftKey], window:mouseup] > window:mousemove!",
-						translate: "[mousedown[event.shiftKey], window:mouseup] > window:mousemove!",
-						zoom: "wheel![event.shiftKey]"
-					},
-					grid: {
-						type: "interval",
-						resolve: "global",
-						bind: "scales",
-						translate: "[mousedown[!event.shiftKey], window:mouseup] > window:mousemove!",
-						zoom: "wheel![!event.shiftKey]"
-					}
-				},
-				encoding: {
-					"tooltip": {
-						"field": "State",
-						"type": "nominal"
-					},
-					"href": {"field": "url", "type": "nominal"},
-					x: {
-						"field": {
-							"repeat": "column"
-						},
-						"type": "quantitative"
-					},
-					y: {
-						field: {
-							"repeat": "row"
-						},
-						type: "quantitative",
-						axis: {
-							"minExtent": 30
-						}
-					},
-					color: {
-						condition: {
-							selection: "brush",
-							field: "State",
-							type: "nominal"
-						},
-						value: "grey"
-					}
-				}
-			}
-		}
 
-		vegaEmbed("#scatter", scatterElement);
-
-		// Assign the specification to a local variable vlSpec.
-		var vlSpec = {
-			$schema: 'https://vega.github.io/schema/vega-lite/v4.json',
-			data: {
-				url: "data.json"
-			},
-
-			mark: 'bar',
-			encoding: {
-				y: {
-					field: 'State',
-					type: 'nominal'
-				},
-				x: {
-					field: 'avgInc',
-					type: 'quantitative',
-					sort: "ascending",
-					axis: {
-						title: 'Average income'
-					}
-				}
-			}
-		};
-
-		// Embed the visualization in the container with id `vis`
-		vegaEmbed('#vis', vlSpec);
+	<script src="js.js">
 	</script>
 </body>
 
